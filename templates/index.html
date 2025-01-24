@@ -1,0 +1,34 @@
+<html lang="en">
+    <head>
+        <title>Feedback Radio</title>
+
+    </head>
+    <body>
+        <p>
+            Home Page!!
+        </p>
+        <div>
+            <button id="MicOn">
+                Mic On
+            </button>
+            <button>
+                Mic Off
+            </button>
+        </div>
+        <script>
+            const constraints = {
+                'video': false,
+                'audio': true
+            }
+
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    console.log('Got MediaStream:', stream);
+                })
+                .catch(error => {
+                    console.error('Error accessing media devices.', error);
+                });
+            
+        </script>
+    </body>
+</html>
