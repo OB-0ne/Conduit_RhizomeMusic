@@ -4,31 +4,17 @@
 
     </head>
     <body>
+        <script src= {{url_for('static', filename='sender.js')}}></script>
         <p>
             Home Page!!
         </p>
         <div>
-            <button id="MicOn">
+            <button id="MicOn" onclick="getAudioStream()">
                 Mic On
             </button>
             <button>
                 Mic Off
             </button>
-        </div>
-        <script>
-            const constraints = {
-                'video': false,
-                'audio': true
-            }
-
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(stream => {
-                    console.log('Got MediaStream:', stream);
-                })
-                .catch(error => {
-                    console.error('Error accessing media devices.', error);
-                });
-            
-        </script>
+        </div>        
     </body>
 </html>
