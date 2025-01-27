@@ -1,7 +1,7 @@
 <html lang="en">
     <head>
         <title>Feedback Radio</title>
-
+        <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     </head>
     <body>
         <script src= {{url_for('static', filename='sender.js')}}></script>
@@ -15,6 +15,9 @@
             <button>
                 Mic Off
             </button>
+            <div id="audio-container">
+                <audio></audio>
+            </div>
         </div>        
     </body>
 </html>
