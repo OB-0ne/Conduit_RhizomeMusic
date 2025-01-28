@@ -1,0 +1,46 @@
+#app-body{
+    background-color: #212224;
+    width: 600px;
+    margin: auto;
+    padding: 20px 10px;
+    color: #f2e3c6;
+    font-family: Helvetica, Arial, sans-serif
+}
+
+#receiver_welcome p{
+    text-align: center;
+    font-size: 42px; 
+}
+
+#stream-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#stream-controls{
+    display: flex;
+    margin: 10px;
+}
+
+#stream-list button{
+    padding: 10px;
+    font-size: 20px;
+    width: 220px;
+    border-radius: 40px;
+}
+
+#audio-container{
+    min-width: 550px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#audio-container audio{
+    width: 75%;
+    background-color: #f2e3c6;
+    border-radius: 30px;
+}

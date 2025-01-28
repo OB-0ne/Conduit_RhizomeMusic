@@ -32,6 +32,7 @@ function playStream() {
             console.log(event.streams[0]);
             audio.srcObject = event.streams[0];
             audio.autoplay = true;
+            audio.controls = true;
             document.getElementById('audio-container').appendChild(audio);
         };
 

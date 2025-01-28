@@ -1,18 +1,24 @@
 <html lang="en">
     <head>
-        <title>Feedback Radio</title>
+        <title>Rhizome Music</title>
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+        <script src= "{{url_for('static', filename='receiver.js')}}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     </head>
     <body>
-        <script src= {{url_for('static', filename='receiver.js')}}></script>
-        <p>
-            Hello Rob!!
-        </p>
-        <div>
-            <button id="playStream" onclick="playStream()">
-                Play Stream
-            </button>
-            <div id="audio-container"></div>
+        <div id="app-body">
+            <div id="receiver_welcome">
+                <p>Hello Rob!!</p>
+            </div>
+            <div id="stream-list">
+                <div id="stream-controls">
+                    <button id="playStream" onclick="playStream()">
+                        Start Stream
+                    </button>
+                </div>
+                <div id="audio-container">
+                </div>
+            </div>        
         </div>        
     </body>
 </html>

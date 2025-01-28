@@ -1,13 +1,15 @@
 <html lang="en">
     <head>
-        <title>Feedback Radio</title>
+        <title>Rhizome Music</title>
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+        <script src= "{{url_for('static', filename='sender.js')}}"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     </head>
     <body>
-        <script src= {{url_for('static', filename='sender.js')}}></script>
-        <p>
+        
+        <div>
             Home Page!!
-        </p>
+        </div>
         <div>
             <button id="MicOn" onclick="getAudioStream()">
                 Mic On
