@@ -22,13 +22,18 @@
 #stream-controls{
     display: flex;
     margin: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-#stream-list button{
+button{
     padding: 10px;
     font-size: 20px;
     width: 220px;
     border-radius: 40px;
+    margin: 2px 5px;
 }
 
 #audio-container{
@@ -43,4 +48,10 @@
     width: 75%;
     background-color: #f2e3c6;
     border-radius: 30px;
+    margin: 5px;
+}
+
+#sender_welcome{
+    text-align: center;
+    font-size: 42px; 
 }

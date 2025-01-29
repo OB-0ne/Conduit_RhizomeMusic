@@ -6,20 +6,21 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     </head>
     <body>
-        
-        <div>
-            Home Page!!
-        </div>
-        <div>
-            <button id="MicOn" onclick="getAudioStream()">
-                Mic On
-            </button>
-            <button>
-                Mic Off
-            </button>
-            <div id="audio-container">
-                <audio></audio>
+        <div id="app-body">
+            <div id="sender_welcome">
+                Rhizome Music Performance
             </div>
-        </div>        
+            <div id="stream-controls">
+                <button id="MicOn" onclick="getAudioStream()">
+                    Mic On
+                </button>
+                <button>
+                    Mic Off
+                </button>
+                <div id="audio-container">
+                    <audio></audio>
+                </div>
+            </div>        
+        </div>
     </body>
 </html>
