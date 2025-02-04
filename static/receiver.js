@@ -1,5 +1,7 @@
 // var socket = io.connect('https://' + document.domain + ':' + location.port);
-var socket = io('http://127.0.0.1:5000');
+// var socket = io('http://127.0.0.1:5000');
+var socket = io.connect(window.location.origin);
+
 let peerConnections = {}; // Store peer connections keyed by socket ID
 
 // STUN Server for NAT traversal
