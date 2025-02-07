@@ -60,17 +60,6 @@ function playStream() {
 
 }
 
-
-// visualization code
-var canvas;
-var ctx;
-
-function visualizer_setup(){
-    canvas = document.getElementById("visualizer");
-    ctx = canvas.getContext("2d");
-    console.log(canvas.width, canvas.height);
-}
-
 function process_audio(stream_source, audio){
     // Define an audio context for the mixer visualization
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -84,54 +73,20 @@ function process_audio(stream_source, audio){
     visualize(analyser,dataArray, audio);
 }
 
-function visualize(analyser,dataArray, audio) {
+function visualize(analyser, dataArray, audio) {
 
     requestAnimationFrame(() => visualize(analyser,dataArray, audio));
-    
     analyser.getByteTimeDomainData(dataArray);
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    
-    const sliceWidth = canvas.width / dataArray.length;
-    let x = 0;
-    
+
+    const slider_temp = document.getElementById("test-slide");
+
+    // Compute volume level (RMS - Root Mean Square)
+    let sum = 0;
     for (let i = 0; i < dataArray.length; i++) {
-        let v = dataArray[i] / 256.0; // Normalize
-        let y = (v * canvas.height) / 2;
-        
-        if (i === 0) {
-            ctx.moveTo(x, y);
-        } else {
-            ctx.lineTo(x, y);
-        }
-        
-        x += sliceWidth;
+        sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
     }
-    
-    ctx.strokeStyle = "#4CAF50";
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    function draw() {
-        requestAnimationFrame(draw);
-
-        analyser.getByteTimeDomainData(dataArray);
-
-        const slider_temp = document.getElementById("test-slide");
-
-        // Compute volume level (RMS - Root Mean Square)
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-            sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
-        }
-        let volume = Math.sqrt(sum / dataArray.length) * audio.volume;  // RMS value
-
-        if (volume>60){
-            console.log(`Volume Level: ${volume.toFixed(2)}`);
-        }
-        slider_temp.value = volume;
-    }
-
-    draw();  // Start the loop
+    let stream_volume = Math.sqrt(sum / dataArray.length) * audio.volume;  // RMS value
+   
+    // assign the slider with the volume value
+    slider_temp.value = stream_volume.toFixed(0);
 }

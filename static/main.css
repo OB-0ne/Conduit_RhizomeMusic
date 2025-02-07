@@ -62,3 +62,25 @@ audio::-webkit-media-controls-timeline
 audio::-moz-media-controls-timeline{
     display: none;
 }
+
+/* for the audio levels */
+.audio-level{
+    -webkit-appearance: none;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.audio-level::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    height: 8px;
+    background: gray;
+    border: none;
+    margin-top: -1px;
+}
+
+.audio-level::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 4px;
+    background: black;
+    box-shadow: -100px 0 0 100px green;
+}
