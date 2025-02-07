@@ -36,6 +36,13 @@ button{
     margin: 2px 5px;
 }
 
+#sender_welcome{
+    text-align: center;
+    font-size: 42px; 
+}
+
+/* CSS for the audio players */
+
 #audio-container{
     min-width: 550px;
     display: flex;
@@ -51,7 +58,7 @@ button{
     margin: 5px;
 }
 
-#sender_welcome{
-    text-align: center;
-    font-size: 42px; 
+audio::-webkit-media-controls-timeline
+audio::-moz-media-controls-timeline{
+    display: none;
 }
