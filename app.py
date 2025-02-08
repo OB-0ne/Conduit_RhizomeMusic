@@ -3,7 +3,8 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.debug = True
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
+# socketio = SocketIO(app, cors_allowed_origins="*")      # ONLY FOR DEV TESTING
 
 @app.route("/")
 def index():
@@ -26,4 +27,5 @@ def handle_candidate(data):
     socketio.emit('candidate', data)
 
 if __name__ == "__main__":
-    socketio.run(app) 
+    socketio.run(app, host="0.0.0.0", port=5000)
+    # socketio.run(app)       # ONLY FOR DEV TESTING
