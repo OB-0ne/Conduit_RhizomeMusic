@@ -110,10 +110,10 @@ function visualize(analyser, dataArray, audio, audio_level, audio_vol_threshold)
    
     // assign the slider with the volume value
     audio_level.value = stream_volume.toFixed(0);
-    if (stream_volume>60){
+    if (stream_volume>80){
         audio_vol_threshold.style.backgroundColor = "red";
     }
-    else if(stream_volume>40){
+    else if(stream_volume>60){
         audio_vol_threshold.style.backgroundColor = "orange";
     }
     else{
