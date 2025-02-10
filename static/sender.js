@@ -1,5 +1,5 @@
-// var socket = io('http://127.0.0.1:5000');       // ONLY FOR DEV TESTING
-var socket = io.connect(window.location.origin);
+var socket = io('http://127.0.0.1:5000');       // ONLY FOR DEV TESTING
+// var socket = io.connect(window.location.origin);
 
 // STUN Server for NAT traversal
 const rtcConfig = {
@@ -12,8 +12,17 @@ const aud_effect_constraints = {
 
 async function getAudioStream(params) {
     // access the default mic of the device
-    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });    
-
+    let stream;
+    
+    try{
+        stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+    }
+    catch
+    {
+        console.log("Mic Permission dismissed");
+        return;
+    }
+    
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
     stream.getTracks().forEach(track => {
@@ -38,5 +47,7 @@ async function getAudioStream(params) {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         }
     });
+
+    document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
 
 }

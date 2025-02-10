@@ -1,5 +1,5 @@
-// var socket = io('http://127.0.0.1:5000');           // ONLY FOR DEV TESTING
-var socket = io.connect(window.location.origin);
+var socket = io('http://127.0.0.1:5000');           // ONLY FOR DEV TESTING
+// var socket = io.connect(window.location.origin);
 
 let peerConnections = {}; // Store peer connections keyed by socket ID
 
