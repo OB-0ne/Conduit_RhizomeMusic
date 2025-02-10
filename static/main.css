@@ -10,6 +10,7 @@
     background-image: url('img/main_bg.jpeg');
     background-attachment: fixed;
     background-size: cover;
+    font-size: 26px;
 }
 
 body{
@@ -29,6 +30,12 @@ body{
     height: 180px;
     width: 180px;
     border-radius: 180px;
+}
+
+#MicInfo{
+    margin: auto;
+    width: 88px;
+    font-size: 16px;
 }
 
 /* RECEIVER UI */

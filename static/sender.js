@@ -48,6 +48,27 @@ async function getAudioStream(params) {
         }
     });
 
+    // change the mic icon and info to show that audio is being tranfer
     document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
+    document.getElementById('MicInfo').innerHTML = '(Mic is ON)';
+
+}
+
+// Random message generator for each used on Arrival
+const welcomeMsgs = [
+    'here/there',
+    'you are remote',
+    'miles of line'
+];
+
+function generate_welcomeMsg(){
+    
+    let msg_len = welcomeMsgs.length;
+    let rand_msg;
+
+    // generate a random number
+    rand_msg = welcomeMsgs[Math.floor(Math.random()*msg_len)];
+    // update the welcome text with random number
+    document.getElementById('sender_welcome').innerHTML = rand_msg;
 
 }

@@ -10,13 +10,16 @@
     <body>
         <div id="app-body-sender">
             <div id="sender_welcome">
-                Rhizome Music Performance (Audience)
+                sender_welcome
+                <script>generate_welcomeMsg()</script>
             </div>
             <div id="stream-controls">
                 <button id="MicOn" onclick="getAudioStream()">
                     <img id="MicIcon" src="static/img/mic_icon_off.png" height="100px">
-                </button>
             </div>        
+            <div id="MicInfo">
+                (Mic is OFF)
+            </div>
         </div>
     </body>
 </html>
