@@ -1,26 +1,25 @@
 <html lang="en">
     <head>
         <title>Rhizome Music</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
         <script src= "{{url_for('static', filename='sender.js')}}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     </head>
     <body>
-        <div id="app-body">
+        <div id="app-body-sender">
             <div id="sender_welcome">
-                Rhizome Music Performance (Audience)
+                sender_welcome
+                <script>generate_welcomeMsg()</script>
             </div>
             <div id="stream-controls">
                 <button id="MicOn" onclick="getAudioStream()">
-                    Mic On
-                </button>
-                <button>
-                    Mic Off
-                </button>
-                <div id="audio-container">
-                    <audio></audio>
-                </div>
+                    <img id="MicIcon" src="static/img/mic_icon_off.png" height="100px">
             </div>        
+            <div id="MicInfo">
+                (Mic is OFF)
+            </div>
         </div>
     </body>
 </html>

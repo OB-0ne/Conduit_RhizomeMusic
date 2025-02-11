@@ -12,8 +12,17 @@ const aud_effect_constraints = {
 
 async function getAudioStream(params) {
     // access the default mic of the device
-    const stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });    
-
+    let stream;
+    
+    try{
+        stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+    }
+    catch
+    {
+        console.log("Mic Permission dismissed");
+        return;
+    }
+    
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
     stream.getTracks().forEach(track => {
@@ -38,5 +47,28 @@ async function getAudioStream(params) {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
         }
     });
+
+    // change the mic icon and info to show that audio is being tranfer
+    document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
+    document.getElementById('MicInfo').innerHTML = '(Mic is ON)';
+
+}
+
+// Random message generator for each used on Arrival
+const welcomeMsgs = [
+    'here/there',
+    'you are remote',
+    'miles of line'
+];
+
+function generate_welcomeMsg(){
+    
+    let msg_len = welcomeMsgs.length;
+    let rand_msg;
+
+    // generate a random number
+    rand_msg = welcomeMsgs[Math.floor(Math.random()*msg_len)];
+    // update the welcome text with random number
+    document.getElementById('sender_welcome').innerHTML = rand_msg;
 
 }

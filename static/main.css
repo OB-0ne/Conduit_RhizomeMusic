@@ -1,4 +1,46 @@
-#app-body{
+/* SENDER-UI */
+
+#app-body-sender{
+    background-color: #212224;
+    /* margin: auto; */
+    padding: 20px 10px;
+    height: 100%;
+    color: #f2e3c6;
+    font-family: Helvetica, Arial, sans-serif;
+    background-image: url('img/main_bg.jpeg');
+    background-attachment: fixed;
+    background-size: cover;
+    font-size: 26px;
+}
+
+body{
+    margin: 0px;
+    height: 100%;
+}
+
+#sender_welcome{
+    text-align: center;
+    font-size: 42px; 
+    padding: 10px;
+    margin: 10px;
+    font-style: italic;
+}
+
+#MicOn{
+    height: 180px;
+    width: 180px;
+    border-radius: 180px;
+}
+
+#MicInfo{
+    margin: auto;
+    width: 88px;
+    font-size: 16px;
+}
+
+/* RECEIVER UI */
+
+#app-body-receiver{
     background-color: #212224;
     width: 600px;
     margin: auto;
@@ -21,7 +63,7 @@
 
 #stream-controls{
     display: flex;
-    margin: 10px;
+    margin: 30px 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,11 +76,6 @@ button{
     width: 220px;
     border-radius: 40px;
     margin: 2px 5px;
-}
-
-#sender_welcome{
-    text-align: center;
-    font-size: 42px; 
 }
 
 /* CSS for the audio players */
