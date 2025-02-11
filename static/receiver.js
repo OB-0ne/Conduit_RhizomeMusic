@@ -58,9 +58,19 @@ function playStream() {
             // add the container component to the list of audios
             document.getElementById('audio-container').appendChild(audio_container);
             audio_container.setAttribute('class','custom-audio-controls');
+            audio_container.setAttribute('id',senderId + '-audio-controls');
 
             // add the visualizer element
             process_audio(audio.srcObject, audio, audio_level, audio_vol_threshold);
+        };
+
+        // Handle disconnections from sender
+        peerConnection.oniceconnectionstatechange = () => {
+            if (peerConnection.iceConnectionState === "disconnected" || 
+                peerConnection.iceConnectionState === "failed") {
+                console.log(senderId + " - Sender has likely left or closed the tab.");
+                document.getElementById(senderId + '-audio-controls').remove();
+            }
         };
 
         // Set remote description and send answer
@@ -77,7 +87,6 @@ function playStream() {
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
     });   
-    
 
 }
 

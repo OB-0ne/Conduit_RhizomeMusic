@@ -14,11 +14,12 @@
                 <script>generate_welcomeMsg()</script>
             </div>
             <div id="stream-controls">
-                <button id="MicOn" onclick="getAudioStream()">
+                <button id="MicOn" onclick="sendAudioStream()">
                     <img id="MicIcon" src="static/img/mic_icon_off.png" height="100px">
             </div>        
             <div id="MicInfo">
                 (Mic is OFF)
+                <script>updateMicInfo()</script>
             </div>
         </div>
     </body>
