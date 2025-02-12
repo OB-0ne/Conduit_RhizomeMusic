@@ -1,16 +1,32 @@
-// var socket = io('http://127.0.0.1:5000');       // ONLY FOR DEV TESTING
 var socket = io.connect(window.location.origin);
+
+// global mic activateion flag
+let micActive = false;
+
+function updateMicInfo(){
+    if (micActive){
+        // change the mic icon and info to show that audio is being tranfer
+        document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
+        document.getElementById('MicInfo').innerHTML = '(Microphone is ON)';
+    } else {
+        // change the mic icon and info to show that audio is being tranfer
+        document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_off.png');
+        document.getElementById('MicInfo').innerHTML = '(Microphone is OFF)';
+    }
+}
 
 // STUN Server for NAT traversal
 const rtcConfig = {
-    iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    iceServers: [
+        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] }
+    ]
 };
 
 const aud_effect_constraints = {
     echoCancellation : false
 };
 
-async function getAudioStream(params) {
+async function sendAudioStream() {
     // access the default mic of the device
     let stream;
     
@@ -40,7 +56,7 @@ async function getAudioStream(params) {
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
     socket.emit('offer', {offer, senderId: socket.id });
-
+    
     socket.on('answer', async ({ answer, remoteSenderID }) => {
         if(remoteSenderID = socket.id){
             // Set the remote description with the answer received from the receiver
@@ -48,9 +64,9 @@ async function getAudioStream(params) {
         }
     });
 
-    // change the mic icon and info to show that audio is being tranfer
-    document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
-    document.getElementById('MicInfo').innerHTML = '(Mic is ON)';
+    // update mic info
+    micActive = true;
+    updateMicInfo();
 
 }
 

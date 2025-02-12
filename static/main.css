@@ -132,9 +132,20 @@ audio::-moz-media-controls-timeline{
     border-radius: 50%;
     display: inline-block;
     margin: auto 10px;
+    box-shadow: inset 2px 2px 2px 0 rgba(255,255,255,0.5), inset -2px -2px 2px 0 rgba(0,0,0,0.5);
+}
+
+.audio-inactive-off{
+    display: none;
 }
 
 .custom-audio-controls{
     display: flex;
     justify-content: center;
+}
+
+#hideInactiveAudioBox{
+    width: 100%;
+    padding-left: 375px;
+    padding-top: 10px;
 }
