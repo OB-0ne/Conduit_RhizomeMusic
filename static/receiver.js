@@ -1,11 +1,12 @@
-// var socket = io('http://127.0.0.1:5000');           // ONLY FOR DEV TESTING
 var socket = io.connect(window.location.origin);
 
 let peerConnections = {}; // Store peer connections keyed by socket ID
 
 // STUN Server for NAT traversal
 const rtcConfig = {
-    iceServers: [{ urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] }]
+    iceServers: [
+        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] }
+    ]
 };
 
 
@@ -32,6 +33,7 @@ function playStream() {
         // Send ICE candidates to the sender
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
+                console.log("New ICE candidate:", event.candidate);
                 socket.emit('candidate', { candidate: event.candidate, senderId });
             }
         };
