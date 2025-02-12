@@ -12,10 +12,19 @@ const rtcConfig = {
 function playStream() {
     
     socket.on('offer', async ({ offer, senderId }) => {
+
+        // check if this senderID already exists, and if yes, do not add audio controls for it
+        if (peerConnections[senderId]){
+            console.log('sender already connected');
+            return;
+        }
+
+        // cretae a new peer connection
         const peerConnection = new RTCPeerConnection(rtcConfig);
         peerConnections[senderId] = peerConnection;
+        
+        // logger for dev checks
         console.log(senderId);
-
         console.log('Received Stream');
         console.log(peerConnections);
         console.log(peerConnection) ;
@@ -33,10 +42,16 @@ function playStream() {
             // make HTML components to be added
             const audio_container = document.createElement('div');
             const audio_level = document.createElement('input');
+            const audio_activity = document.createElement('span');
             const audio_vol_threshold = document.createElement('span');
             const audio = document.createElement('audio');
             const remoteStream = event.streams[0];
             
+            // add an audio activity circle
+            audio_activity.setAttribute('class','audio-threshold');
+            audio_activity.style.backgroundColor = "green";
+            audio_container.appendChild(audio_activity);
+
             // generate the audio component and connect the peer stream to it
             audio.srcObject = remoteStream;
             audio.autoplay = true;
@@ -64,12 +79,19 @@ function playStream() {
             process_audio(audio.srcObject, audio, audio_level, audio_vol_threshold);
         };
 
-        // Handle disconnections from sender
+        // Handle connections/disconnections from sender
         peerConnection.oniceconnectionstatechange = () => {
-            if (peerConnection.iceConnectionState === "disconnected" || 
-                peerConnection.iceConnectionState === "failed") {
-                console.log(senderId + " - Sender has likely left or closed the tab.");
-                document.getElementById(senderId + '-audio-controls').remove();
+            if (peerConnection.iceConnectionState === "connected") {
+                document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "green";
+            }
+            else if (peerConnection.iceConnectionState === "checking") {
+                document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "yellow";
+            }
+            else if (peerConnection.iceConnectionState === "disconnected" || 
+                peerConnection.iceConnectionState === "failed" ||
+                peerConnection.iceConnectionState === "closed") {
+                    document.getElementById(senderId + '-audio-controls').classList.add("audio-inactive");
+                    document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "red";
             }
         };
 
@@ -128,4 +150,25 @@ function visualize(analyser, dataArray, audio, audio_level, audio_vol_threshold)
     else{
         audio_vol_threshold.style.backgroundColor = "#bbb";
     }
+}
+
+function hideInactiveStreams(input_selection){
+    
+    // get all the inactive audio divs
+    const inactives = document.getElementsByClassName("audio-inactive");
+
+    // depending on check selection add and remove the class with right display CSS
+    if(input_selection.checked){
+        for(let i=0; i<inactives.length; i++){
+            inactives[i].classList.add("audio-inactive-off");
+            inactives[i].classList.remove("custom-audio-controls");
+        }
+    }
+    else{
+        for(let i=0; i<inactives.length; i++){
+            inactives[i].classList.remove("audio-inactive-off");
+            inactives[i].classList.add("custom-audio-controls");
+        }
+    }
+    
 }
