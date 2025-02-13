@@ -52,6 +52,7 @@ async function sendAudioStream() {
     stream.getTracks().forEach(track => {
         track.applyConstraints(aud_effect_constraints);
         peerConnection.addTrack(track, stream);
+        console.log('XX - Track added to P2P', stream)
     });
 
     console.log('2 - PeerConnection variable made and stream added to it');

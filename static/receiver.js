@@ -52,6 +52,7 @@ function playStream() {
             const audio_vol_threshold = document.createElement('span');
             const audio = document.createElement('audio');
             const remoteStream = event.streams[0];
+            console.log(event.streams);
             
             // add an audio activity circle
             audio_activity.setAttribute('class','audio-threshold');
