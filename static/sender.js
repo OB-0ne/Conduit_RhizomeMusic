@@ -62,8 +62,8 @@ async function sendAudioStream() {
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
             socket.emit('candidate', { candidate: event.candidate, senderId: socket.id });
-            console.log(event.candidate);
-            console.log('? - socket candidate emitted');
+            console.log(event.candidate.candidate);
+            console.log('XX - socket candidate emitted');
 
         }
     };
@@ -79,15 +79,15 @@ async function sendAudioStream() {
         if(remoteSenderID == socket.id){
             // Set the remote description with the answer received from the receiver
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-            console.log('? - anser received and added for peer connection');
+            console.log('XX - anser received and added for peer connection');
         }
     });
 
     // Handle ICE candidates from receiver
     socket.on('candidateRec', ({ candidate, originalSenderId }) => {
-        console.log("CANDIDATE_REC", candidate, originalSenderId);
+        console.log("CANDIDATE_REC", originalSenderId);
         if (originalSenderId == socket.id) {
-            console.log("CANDIDATE_REC_PASS", candidate, originalSenderId);
+            console.log("CANDIDATE_REC_PASS", candidate.candidate, originalSenderId);
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
     });

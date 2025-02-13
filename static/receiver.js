@@ -37,7 +37,7 @@ function playStream() {
         // Send ICE candidates to the sender
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
-                // console.log("New ICE candidate:", event.candidate);
+                console.log("New ICE candidate:", event.candidate.candidate,senderId);
                 socket.emit('candidateRec', { candidate: event.candidate, originalSenderId: senderId });
             }
         };
@@ -88,6 +88,7 @@ function playStream() {
 
         // Handle connections/disconnections from sender
         peerConnection.oniceconnectionstatechange = () => {
+            console.log("ICE Connection for " + senderId + ":", peerConnection.iceConnectionState);
             if (peerConnection.iceConnectionState === "connected") {
                 document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "green";
             }
@@ -99,7 +100,6 @@ function playStream() {
                 peerConnection.iceConnectionState === "closed") {
                     document.getElementById(senderId + '-audio-controls').classList.add("audio-inactive");
                     document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "red";
-                    console.log("ICE Connection for " + senderId + ":", peerConnection.iceConnectionState);
             }
         };
 
