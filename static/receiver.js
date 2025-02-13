@@ -5,7 +5,12 @@ let peerConnections = {}; // Store peer connections keyed by socket ID
 // STUN Server for NAT traversal
 const rtcConfig = {
     iceServers: [
-        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] }
+        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] },
+        {
+            urls: "turn:relay.backups.cz", // Free TURN server (temporary)
+            username: "webrtc",
+            credential: "webrtc"
+        }
     ]
 };
 
@@ -98,6 +103,7 @@ function playStream() {
                 peerConnection.iceConnectionState === "closed") {
                     document.getElementById(senderId + '-audio-controls').classList.add("audio-inactive");
                     document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "red";
+                    console.log("ICE Connection for " + senderId + ":", peerConnection.iceConnectionState);
             }
         };
 
