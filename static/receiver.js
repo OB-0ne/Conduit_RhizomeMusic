@@ -14,6 +14,8 @@ function playStream() {
     
     socket.on('offer', async ({ offer, senderId }) => {
 
+        console.log('O0 - Offer recived');
+
         // check if this senderID already exists, and if yes, do not add audio controls for it
         if (peerConnections[senderId]){
             console.log('sender already connected');
@@ -23,20 +25,22 @@ function playStream() {
         // cretae a new peer connection
         const peerConnection = new RTCPeerConnection(rtcConfig);
         peerConnections[senderId] = peerConnection;
+
+        console.log('O1 - Peerconnection var made and added to list of connections');
         
         // logger for dev checks
-        console.log(senderId);
-        console.log('Received Stream');
-        console.log(peerConnections);
-        console.log(peerConnection) ;
+        // console.log(senderId);
+        // console.log('Received Stream');
+        // console.log(peerConnections);
+        // console.log(peerConnection) ;
 
         // Send ICE candidates to the sender
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                console.log("New ICE candidate:", event.candidate);
-                socket.emit('candidate', { candidate: event.candidate, senderId });
-            }
-        };
+        // peerConnection.onicecandidate = event => {
+        //     if (event.candidate) {
+        //         console.log("New ICE candidate:", event.candidate);
+        //         socket.emit('candidate', { candidate: event.candidate, senderId });
+        //     }
+        // };
 
         // Handle incoming audio stream
         peerConnection.ontrack = event => {
@@ -101,7 +105,10 @@ function playStream() {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
-        socket.emit('answer', { answer, senderId });
+        console.log('02 - Pre answer: ' + senderId);
+        socket.emit('answer', { answer, remoteSenderID: senderId });
+        console.log('O3 - Answer socket emmited back to sender recived');
+
     });
 
     // Handle incoming ICE candidates
@@ -110,8 +117,7 @@ function playStream() {
         if (peerConnection) {
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
-    });   
-
+    });
 }
 
 function process_audio(stream_source, audio, audio_level, audio_vol_threshold){

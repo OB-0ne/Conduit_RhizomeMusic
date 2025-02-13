@@ -30,6 +30,7 @@ async function sendAudioStream() {
     // access the default mic of the device
     let stream;
     
+    console.log('0 - Function started');
     try{
         stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
     }
@@ -39,28 +40,41 @@ async function sendAudioStream() {
         return;
     }
     
+    console.log('1 - Audio found and added to stream');
+    
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
     stream.getTracks().forEach(track => {
         track.applyConstraints(aud_effect_constraints);
         peerConnection.addTrack(track, stream);
     });
+
+    console.log('2 - PeerConnection variable made and stream added to it');
+
     
     // send the input audio as an offer
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
             socket.emit('candidate', { candidate: event.candidate, senderId: socket.id });
+            // console.log(event.candidate);
+            console.log('? - socket candidate emitted');
+
         }
     };
 
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
+    console.log('3 - Offer generated');
     socket.emit('offer', {offer, senderId: socket.id });
+    console.log('4 - socket Offer emitted');
+
     
     socket.on('answer', async ({ answer, remoteSenderID }) => {
-        if(remoteSenderID = socket.id){
+        console.log(remoteSenderID, socket.id,remoteSenderID == socket.id);
+        if(remoteSenderID == socket.id){
             // Set the remote description with the answer received from the receiver
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+            console.log('? - anser received and added for peer connection');
         }
     });
 
