@@ -20,7 +20,7 @@ const rtcConfig = {
     iceServers: [
         { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] },
         {
-            urls: "turn:relay.backups.cz", // Free TURN server (temporary)
+            urls: "turn:relay.backups.cz?transport=tcp", // Free TURN server (temporary)
             username: "webrtc",
             credential: "webrtc"
         }
@@ -47,6 +47,7 @@ async function sendAudioStream() {
     
     console.log('1 - Audio found and added to stream');
     
+    
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
     stream.getTracks().forEach(track => {
@@ -57,6 +58,11 @@ async function sendAudioStream() {
 
     console.log('2 - PeerConnection variable made and stream added to it');
 
+    // check for ice errors
+    peerConnection.onicecandidateerror = (event) => {
+        console.error("ICE Candidate Error:", event);
+    };
+    
     
     // send the input audio as an offer
     peerConnection.onicecandidate = event => {

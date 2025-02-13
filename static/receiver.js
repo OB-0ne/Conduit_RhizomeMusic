@@ -7,7 +7,7 @@ const rtcConfig = {
     iceServers: [
         { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] },
         {
-            urls: "turn:relay.backups.cz", // Free TURN server (temporary)
+            urls: "turn:relay.backups.cz?transport=tcp", // Free TURN server (temporary)
             username: "webrtc",
             credential: "webrtc"
         }
@@ -33,7 +33,11 @@ function playStream() {
 
         console.log('O1 - Peerconnection var made and added to list of connections');
         
-        
+        // check for ice errors
+        peerConnection.onicecandidateerror = (event) => {
+            console.error("ICE Candidate Error:", event);
+        };
+
         // Send ICE candidates to the sender
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
@@ -116,6 +120,7 @@ function playStream() {
     // Handle incoming ICE candidates
     socket.on('candidate', ({ candidate, senderId }) => {
         const peerConnection = peerConnections[senderId];
+        console.log("ON_CANDI", candidate.candidate, senderId)
         if (peerConnection) {
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
