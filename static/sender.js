@@ -75,7 +75,6 @@ async function sendAudioStream() {
 
     
     socket.on('answer', async ({ answer, remoteSenderID }) => {
-        console.log(remoteSenderID, socket.id,remoteSenderID == socket.id);
         if(remoteSenderID == socket.id){
             // Set the remote description with the answer received from the receiver
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
@@ -87,6 +86,7 @@ async function sendAudioStream() {
     socket.on('candidateRec', ({ candidate, originalSenderId }) => {
         console.log("CANDIDATE_REC", candidate, originalSenderId);
         if (originalSenderId == socket.id) {
+            console.log("CANDIDATE_REC_PASS", candidate, originalSenderId);
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
     });
