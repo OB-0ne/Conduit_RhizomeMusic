@@ -33,21 +33,16 @@ function playStream() {
 
         console.log('O1 - Peerconnection var made and added to list of connections');
         
-        // logger for dev checks
-        // console.log(senderId);
-        // console.log('Received Stream');
-        // console.log(peerConnections);
-        // console.log(peerConnection) ;
-
+        
         // Send ICE candidates to the sender
-        // peerConnection.onicecandidate = event => {
-        //     if (event.candidate) {
-        //         console.log("New ICE candidate:", event.candidate);
-        //         socket.emit('candidate', { candidate: event.candidate, senderId });
-        //     }
-        // };
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                // console.log("New ICE candidate:", event.candidate);
+                socket.emit('candidateRec', { candidate: event.candidate, originalSenderId: senderId });
+            }
+        };
 
-        // Handle incoming audio stream
+        // Handle incoming audio stream and convert to UI element
         peerConnection.ontrack = event => {
             
             // make HTML components to be added
