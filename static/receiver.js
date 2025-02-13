@@ -32,14 +32,7 @@ function playStream() {
         peerConnections[senderId] = peerConnection;
 
         console.log('O1 - Peerconnection var made and added to list of connections');
-
-        // Set remote description and send answer
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        console.log('02 - Pre answer: ' + senderId);
-        socket.emit('answer', { answer, remoteSenderID: senderId });
-        console.log('O3 - Answer socket emmited back to sender recived');        
+        
         
         // Send ICE candidates to the sender
         peerConnection.onicecandidate = event => {
@@ -109,7 +102,13 @@ function playStream() {
             }
         };
 
-        
+        // Set remote description and send answer
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        console.log('02 - Pre answer: ' + senderId);
+        socket.emit('answer', { answer, remoteSenderID: senderId });
+        console.log('O3 - Answer socket emmited back to sender recived');
 
     });
 
