@@ -3,7 +3,7 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 app.debug = True
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="gevent")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 @app.route("/")
 def index():
