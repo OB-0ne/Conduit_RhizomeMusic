@@ -15,22 +15,43 @@ function updateMicInfo(){
     }
 }
 
+function generate_welcomeMsg(){
+    
+    // Random message generator for each used on Arrival
+    const welcomeMsgs = [
+        'here/there',
+        'you are remote',
+        'miles of line'
+    ];
+
+    let msg_len = welcomeMsgs.length;
+    let rand_msg;
+
+    // generate a random number
+    rand_msg = welcomeMsgs[Math.floor(Math.random()*msg_len)];
+    // update the welcome text with random number
+    document.getElementById('sender_welcome').innerHTML = rand_msg;
+
+}
+
+function setupSenderUI(){
+    generate_welcomeMsg();
+    updateMicInfo();
+}
+
+async function fetchIceConfig() {
+    try {
+        const response = await fetch(window.location.origin + "/ice-config");
+        const iceConfig = await response.json();
+        return iceConfig;
+    } catch (error) {
+        console.error("Failed to fetch ICE config:", error);
+        return { iceServers: [] };  // Fallback to an empty config
+    }
+}
+
 // STUN Server for NAT traversal
-const rtcConfig = {
-    iceServers: [
-        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] },
-        {
-            urls: "turn:openrelay.metered.ca:80",
-            username: "openrelayproject",
-            credential: "openrelayproject"
-        },
-        {
-            urls: "turn:openrelay.metered.ca:443",
-            username: "openrelayproject",
-            credential: "openrelayproject"
-        }
-    ]
-};
+const rtcConfig = fetchIceConfig();
 
 const aud_effect_constraints = {
     echoCancellation : false
@@ -109,21 +130,5 @@ async function sendAudioStream() {
 
 }
 
-// Random message generator for each used on Arrival
-const welcomeMsgs = [
-    'here/there',
-    'you are remote',
-    'miles of line'
-];
 
-function generate_welcomeMsg(){
-    
-    let msg_len = welcomeMsgs.length;
-    let rand_msg;
 
-    // generate a random number
-    rand_msg = welcomeMsgs[Math.floor(Math.random()*msg_len)];
-    // update the welcome text with random number
-    document.getElementById('sender_welcome').innerHTML = rand_msg;
-
-}
