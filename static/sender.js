@@ -39,6 +39,7 @@ function setupSenderUI(){
     updateMicInfo();
 }
 
+// STUN Server for NAT traversal
 async function fetchIceConfig() {
     try {
         const response = await fetch(window.location.origin + "/ice-config");
@@ -50,8 +51,6 @@ async function fetchIceConfig() {
     }
 }
 
-// STUN Server for NAT traversal
-const rtcConfig = fetchIceConfig();
 
 const aud_effect_constraints = {
     echoCancellation : false
@@ -60,6 +59,9 @@ const aud_effect_constraints = {
 async function sendAudioStream() {
     // access the default mic of the device
     let stream;
+
+    const rtcConfig = await fetchIceConfig();
+    console.log(rtcConfig);
     
     console.log('0 - Function started');
     try{

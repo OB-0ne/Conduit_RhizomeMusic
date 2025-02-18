@@ -2,6 +2,7 @@ var socket = io.connect(window.location.origin);
 
 let peerConnections = {}; // Store peer connections keyed by socket ID
 
+// STUN Server for NAT traversal
 async function fetchIceConfig() {
     try {
         const response = await fetch(window.location.origin + "/ice-config");
@@ -13,13 +14,11 @@ async function fetchIceConfig() {
     }
 }
 
-// STUN Server for NAT traversal
-const rtcConfig = fetchIceConfig();
-console.log(rtcConfig);
-
-
-function playStream() {
+async function playStream() {
     
+    const rtcConfig = await fetchIceConfig();
+    console.log(rtcConfig);
+
     socket.on('offer', async ({ offer, senderId }) => {
 
         console.log('O0 - Offer recived');

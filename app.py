@@ -19,7 +19,7 @@ def index():
 
 @app.route('/ice-config')
 def get_ice_config():
-    return jsonify(token.ice_servers)
+    return jsonify({"iceServers": token.ice_servers})
 
 @app.route("/laptop_Rob")
 def receiver_page():
