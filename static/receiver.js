@@ -5,7 +5,17 @@ let peerConnections = {}; // Store peer connections keyed by socket ID
 // STUN Server for NAT traversal
 const rtcConfig = {
     iceServers: [
-        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] }
+        { urls: ['stun:stun.l.google.com:19302','stun:stun1.l.google.com:19302'] },
+        {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        }
     ]
 };
 
@@ -13,6 +23,8 @@ const rtcConfig = {
 function playStream() {
     
     socket.on('offer', async ({ offer, senderId }) => {
+
+        console.log('O0 - Offer recived');
 
         // check if this senderID already exists, and if yes, do not add audio controls for it
         if (peerConnections[senderId]){
@@ -23,22 +35,23 @@ function playStream() {
         // cretae a new peer connection
         const peerConnection = new RTCPeerConnection(rtcConfig);
         peerConnections[senderId] = peerConnection;
+
+        console.log('O1 - Peerconnection var made and added to list of connections');
         
-        // logger for dev checks
-        console.log(senderId);
-        console.log('Received Stream');
-        console.log(peerConnections);
-        console.log(peerConnection) ;
+        // check for ice errors
+        peerConnection.onicecandidateerror = (event) => {
+            console.error("ICE Candidate Error:", event);
+        };
 
         // Send ICE candidates to the sender
         peerConnection.onicecandidate = event => {
             if (event.candidate) {
-                console.log("New ICE candidate:", event.candidate);
-                socket.emit('candidate', { candidate: event.candidate, senderId });
+                console.log("New ICE candidate:", event.candidate.candidate,senderId);
+                socket.emit('candidateRec', { candidate: event.candidate, originalSenderId: senderId });
             }
         };
 
-        // Handle incoming audio stream
+        // Handle incoming audio stream and convert to UI element
         peerConnection.ontrack = event => {
             
             // make HTML components to be added
@@ -48,6 +61,7 @@ function playStream() {
             const audio_vol_threshold = document.createElement('span');
             const audio = document.createElement('audio');
             const remoteStream = event.streams[0];
+            console.log(event.streams);
             
             // add an audio activity circle
             audio_activity.setAttribute('class','audio-threshold');
@@ -83,6 +97,7 @@ function playStream() {
 
         // Handle connections/disconnections from sender
         peerConnection.oniceconnectionstatechange = () => {
+            console.log("ICE Connection for " + senderId + ":", peerConnection.iceConnectionState);
             if (peerConnection.iceConnectionState === "connected") {
                 document.getElementById(senderId + '-audio-controls').getElementsByClassName("audio-threshold")[0].style.backgroundColor = "green";
             }
@@ -101,17 +116,20 @@ function playStream() {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
-        socket.emit('answer', { answer, senderId });
+        console.log('02 - Pre answer: ' + senderId);
+        socket.emit('answer', { answer, remoteSenderID: senderId });
+        console.log('O3 - Answer socket emmited back to sender recived');
+
     });
 
     // Handle incoming ICE candidates
     socket.on('candidate', ({ candidate, senderId }) => {
         const peerConnection = peerConnections[senderId];
+        console.log("ON_CANDI", candidate.candidate, senderId)
         if (peerConnection) {
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
-    });   
-
+    });
 }
 
 function process_audio(stream_source, audio, audio_level, audio_vol_threshold){
