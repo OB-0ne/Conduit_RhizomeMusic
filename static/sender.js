@@ -1,7 +1,8 @@
 var socket = io.connect(window.location.origin);
 
-// global mic activateion flag
+// global mic activateion flag and info flag
 let micActive = false;
+let websiteInfoMore = true;
 
 function updateMicInfo(){
     if (micActive){
@@ -31,6 +32,29 @@ function generate_welcomeMsg(){
     rand_msg = welcomeMsgs[Math.floor(Math.random()*msg_len)];
     // update the welcome text with random number
     document.getElementById('sender_welcome').innerHTML = rand_msg;
+
+}
+
+function hideUnhideWebsiteInfo(){
+    
+    // flip the flag
+    websiteInfoMore = !websiteInfoMore;
+    // get list of all info to hide or unhide
+    const moreInfoList = document.getElementsByClassName("more-websiteInfo");
+
+    // depending on the flag - change info text and hide/unhide instructions
+    if (websiteInfoMore){
+        document.getElementById('websiteInfoMoreButton').innerHTML = "<u>(more info)</u>";
+        for(let i=0; i<moreInfoList.length; i++){
+            // this class has a display none porperty
+            moreInfoList[i].classList.add("audio-inactive-off");
+        }
+    } else {
+        document.getElementById('websiteInfoMoreButton').innerHTML = "<u>(less info)</u>";
+        for(let i=0; i<moreInfoList.length; i++){
+            moreInfoList[i].classList.remove("audio-inactive-off");
+        }
+    }
 
 }
 

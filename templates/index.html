@@ -22,6 +22,29 @@
             <div id="MicInfo">
                 (Microphone is OFF)
             </div>
+            <div id="websiteInfoBack">
+                <div><u>Note</u></div>
+                <ul>
+                    <li>
+                        Please click the microphone icon once to turn it on, and it will turn green.
+                    </li>
+                    <li>
+                        Please allow permission to use your microphone if prompted.
+                    </li>                    
+                    <li>
+                        Once you close this webpage, the microphone will no longer be used.
+                    </li>
+                    <li class="more-websiteInfo audio-inactive-off">
+                        If the phone screen is locked, your microphone will be turned off, but it may try reconnecting after unlocking.
+                    </li>
+                    <li class="more-websiteInfo audio-inactive-off">
+                        Your microphone will be automatically disconnected after the performance ends.
+                    </li>
+                </ul>
+                <div id="websiteInfoMoreButton" onclick="hideUnhideWebsiteInfo()">
+                    <u>(more info)</u>
+                </div>
+            </div>
             <script>
                 setupSenderUI()
             </script>
