@@ -4,14 +4,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+        <script src="https://sdk.twilio.com/js/video/releases/2.22.1/twilio-video.min.js"></script>
         <script src= "{{url_for('static', filename='sender.js')}}"></script>
+        <link rel="shortcut icon" href="static/img/icon.png">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
     </head>
     <body>
         <div id="app-body-sender">
             <div id="sender_welcome">
                 sender_welcome
-                <script>generate_welcomeMsg()</script>
             </div>
             <div id="stream-controls">
                 <button id="MicOn" onclick="sendAudioStream()">
@@ -19,8 +20,10 @@
             </div>        
             <div id="MicInfo">
                 (Microphone is OFF)
-                <script>updateMicInfo()</script>
             </div>
+            <script>
+                setupSenderUI()
+            </script>
         </div>
     </body>
 </html>
