@@ -58,12 +58,18 @@ async function playStream() {
             // make HTML components to be added
             const audio_container = document.createElement('div');
             const audio_level = document.createElement('input');
+            const audio_num = document.createElement('span');
             const audio_activity = document.createElement('span');
             const audio_vol_threshold = document.createElement('span');
             const audio = document.createElement('audio');
             const remoteStream = event.streams[0];
             console.log(event.streams);
             
+            // add a number to the audio
+            audio_num.innerHTML = Object.keys(peerConnections).length;
+            audio_num.setAttribute('class','audio-number');
+            audio_container.appendChild(audio_num);
+
             // add an audio activity circle
             audio_activity.setAttribute('class','audio-threshold');
             audio_activity.style.backgroundColor = "green";

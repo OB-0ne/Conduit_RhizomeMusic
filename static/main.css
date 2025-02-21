@@ -138,6 +138,10 @@ audio::-moz-media-controls-timeline{
     display: none;
 }
 
+.audio-number{
+    margin: auto;
+}
+
 .custom-audio-controls{
     display: flex;
     justify-content: center;
