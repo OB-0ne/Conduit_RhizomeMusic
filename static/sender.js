@@ -150,6 +150,15 @@ async function sendAudioStream() {
         }
     });
 
+    // Handle when receiver closes the stream
+    socket.on('byeBye', (event) => {
+        peerConnection.close();
+        // update mic info
+        console.log('receiver byebye');
+        micActive = false;
+        updateMicInfo();
+    });
+
     // update mic info
     micActive = true;
     updateMicInfo();

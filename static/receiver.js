@@ -137,6 +137,12 @@ async function playStream() {
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
     });
+
+    // Handle when this page is closes - equivalent to closing stream
+    window.addEventListener('beforeunload', function(event) {
+        navigator.sendBeacon("/receiver_disconnect");
+    });
+    
 }
 
 function process_audio(stream_source, audio, audio_level, audio_vol_threshold){
