@@ -19,6 +19,10 @@ async function playStream() {
     const rtcConfig = await fetchIceConfig();
     console.log(rtcConfig);
 
+    // update the stream activity info
+    document.getElementById('streamActiveInfoStatus').innerHTML = "ACTIVE"
+    document.getElementById('streamActiveInfoStatus').style.color = "green";
+
     socket.on('offer', async ({ offer, senderId }) => {
 
         console.log('O0 - Offer recived');
