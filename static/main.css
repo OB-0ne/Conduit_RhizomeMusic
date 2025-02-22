@@ -38,7 +38,7 @@ html,body{
 
 #MicInfo{
     margin: auto;
-    width: 152px;
+    width: fit-content;
     font-size: 16px;
 }
 
