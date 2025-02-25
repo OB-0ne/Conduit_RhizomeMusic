@@ -9,7 +9,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 # generate the ICE configuration on the server
 account_sid = os.environ["TWILIO_ACCOUNT_SID"]
-auth_token =  os.environ["TWILIO_AUTH_TOKEN"]
+auth_token = os.environ["TWILIO_AUTH_TOKEN"]
 client = Client(account_sid, auth_token)
 token = client.tokens.create()
 
@@ -38,8 +38,12 @@ def handle_candidate(data):
     socketio.emit('candidate', data)
 
 @socketio.on('candidateRec')
-def handle_candidate(data):
+def handle_candidateRec(data):
     socketio.emit('candidateRec', data)
+
+@app.route('/receiver_disconnect', methods=['POST'])
+def handle_receiver_disconnect():
+    socketio.emit('byeBye')
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=5000)

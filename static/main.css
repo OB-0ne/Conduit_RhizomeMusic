@@ -13,7 +13,7 @@
     font-size: 26px;
 }
 
-body{
+html,body{
     margin: 0px;
     height: 100%;
 }
@@ -32,10 +32,39 @@ body{
     border-radius: 180px;
 }
 
+#MicOn:active{
+    background-color: green;
+}
+
 #MicInfo{
     margin: auto;
-    width: 152px;
+    width: fit-content;
     font-size: 16px;
+}
+
+#websiteInfoBack{
+    width: 85%;
+    max-width: 390px;
+    margin: 30px auto 10px;
+    background: rgba(12, 12, 12, .6);
+    padding: 10px 5px;
+    font-size: 18px;
+}
+
+#websiteInfoBack div{
+    margin: auto;
+    width: fit-content;
+    padding-top: 2px;
+}
+
+#websiteInfoBack ul{
+    padding-inline-start: 25px; 
+}
+
+#websiteInfoMoreButton{
+    color: #2e77c9;;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 /* RECEIVER UI */
@@ -62,7 +91,6 @@ body{
 }
 
 #stream-controls{
-    display: flex;
     margin: 30px 10px;
     display: flex;
     justify-content: center;
@@ -77,6 +105,7 @@ button{
     border-radius: 40px;
     margin: 2px 5px;
 }
+
 
 /* CSS for the audio players */
 
@@ -139,6 +168,10 @@ audio::-moz-media-controls-timeline{
     display: none;
 }
 
+.audio-number{
+    margin: auto;
+}
+
 .custom-audio-controls{
     display: flex;
     justify-content: center;
@@ -148,4 +181,19 @@ audio::-moz-media-controls-timeline{
     width: 100%;
     padding-left: 375px;
     padding-top: 10px;
+}
+
+#streamActiveInfo{
+    width: 100%;
+    padding-left: 205px;
+    padding-top: 10px;
+}
+
+#streamActiveInfoStatus{
+    color: red;
+    font-weight: bold;
+}
+
+* {
+    box-sizing: border-box;
 }
