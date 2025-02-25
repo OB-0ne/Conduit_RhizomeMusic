@@ -4,6 +4,7 @@ var socket = io.connect(window.location.origin);
 let micActive = false;
 let websiteInfoMore = true;
 
+// a function to update the mic infoprmation UI during connection/disconnection
 function updateMicInfo(){
     if (micActive){
         // change the mic icon and info to show that audio is being tranfer
@@ -16,9 +17,10 @@ function updateMicInfo(){
     }
 }
 
+// Random message generator for each used on Arrival
 function generate_welcomeMsg(){
     
-    // Random message generator for each used on Arrival
+    // List of messages whihc can be shown to the user
     const welcomeMsgs = [
         'here/there',
         'you are remote',
@@ -35,6 +37,7 @@ function generate_welcomeMsg(){
 
 }
 
+// flip the website info visibility when more or less info button is clicked
 function hideUnhideWebsiteInfo(){
     
     // flip the flag
@@ -58,12 +61,13 @@ function hideUnhideWebsiteInfo(){
 
 }
 
+// bundling together all functions to be called when loading the UI
 function setupSenderUI(){
     generate_welcomeMsg();
     updateMicInfo();
 }
 
-// STUN Server for NAT traversal
+// custom STUN Server for NAT traversal from servers
 async function fetchIceConfig() {
     try {
         const response = await fetch(window.location.origin + "/ice-config");
@@ -75,19 +79,21 @@ async function fetchIceConfig() {
     }
 }
 
-
+// any audio effects to be added to audio
 const aud_effect_constraints = {
     echoCancellation : false
 };
 
+
+// When user clicks the mic icon
 async function sendAudioStream() {
-    // access the default mic of the device
+    // setup a variable to access the default mic of the device
     let stream;
 
+    // get the NAT/STUn/TURN server config from the server
     const rtcConfig = await fetchIceConfig();
-    console.log(rtcConfig);
-    
-    console.log('0 - Function started');
+        
+    // catch any error is user's mic was not accessible
     try{
         stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
     }
@@ -95,75 +101,60 @@ async function sendAudioStream() {
     {
         console.log("Mic Permission dismissed");
         return;
-    }
-    
-    console.log('1 - Audio found and added to stream');
-    
+    }    
     
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
+    // apply custom setting to each mic track and add it to the p2p connection
     stream.getTracks().forEach(track => {
         track.applyConstraints(aud_effect_constraints);
         peerConnection.addTrack(track, stream);
-        console.log('XX - Track added to P2P', stream)
-    });
-
-    console.log('2 - PeerConnection variable made and stream added to it');
-
-    // check for ice errors
-    peerConnection.onicecandidateerror = (event) => {
-        console.error("ICE Candidate Error:", event);
-    };
+    });    
     
-    
-    // send the input audio as an offer
+    // this helps the user to send all their puclic access points while declaring themselves as 
+    // an ICE candidate over the network to everyone
+    // sender also sends personal ID to recognize any open communication from the receiver
     peerConnection.onicecandidate = event => {
         if (event.candidate) {
             socket.emit('candidate', { candidate: event.candidate, senderId: socket.id });
-            console.log(event.candidate.candidate);
-            console.log('XX - socket candidate emitted');
-
         }
     };
 
+    // create an offer which will be send to the receiver, while waiting for an 'answer'
+    // which helps to confirm that the connection has been made
     const offer = await peerConnection.createOffer();
     await peerConnection.setLocalDescription(offer);
-    console.log('3 - Offer generated');
     socket.emit('offer', {offer, senderId: socket.id });
-    console.log('4 - socket Offer emitted');
 
+    // update mic info as it is being used to send audio now
+    micActive = true;
+    updateMicInfo();
     
+    // define what to do when an 'answer' is available on the open network
     socket.on('answer', async ({ answer, remoteSenderID }) => {
+        // remote ID is checked so that only answer for sender's offer are entertained
+        // all other senders also have their answers which can be ignored with this check
         if(remoteSenderID == socket.id){
             // Set the remote description with the answer received from the receiver
             await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-            console.log('XX - anser received and added for peer connection');
         }
     });
 
-    // Handle ICE candidates from receiver
+    // Receiver also exposes their ICE candidate info to make a proper p2p connection
+    // this handles to review only connection details for current sender before finalizing the connection
     socket.on('candidateRec', ({ candidate, originalSenderId }) => {
-        console.log("CANDIDATE_REC", originalSenderId);
         if (originalSenderId == socket.id) {
-            console.log("CANDIDATE_REC_PASS", candidate.candidate, originalSenderId);
             peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
         }
     });
 
-    // Handle when receiver closes the stream
+    // when receiver closes the stream, this helps to handle any local disconnections
     socket.on('byeBye', (event) => {
         peerConnection.close();
+        
         // update mic info
-        console.log('receiver byebye');
         micActive = false;
         updateMicInfo();
     });
 
-    // update mic info
-    micActive = true;
-    updateMicInfo();
-
 }
-
-
-
