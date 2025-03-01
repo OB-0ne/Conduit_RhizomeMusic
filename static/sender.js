@@ -9,11 +9,11 @@ function updateMicInfo(){
     if (micActive){
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
-        document.getElementById('MicInfo').innerHTML = '(Your microphone is ON)';
+        document.getElementById('MicInfo').innerHTML = 'Your microphone is ON';
     } else {
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_off.png');
-        document.getElementById('MicInfo').innerHTML = '(Your microphone is OFF)';
+        document.getElementById('MicInfo').innerHTML = 'Your microphone is OFF';
     }
 }
 

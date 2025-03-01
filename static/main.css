@@ -10,6 +10,7 @@
     background-image: url('img/main_bg.jpeg');
     background-attachment: fixed;
     background-size: cover;
+    background-repeat: repeat-y;
     font-size: 26px;
 }
 
@@ -30,6 +31,7 @@ html,body{
     height: 180px;
     width: 180px;
     border-radius: 180px;
+    background-color: f2e3c6;
 }
 
 #MicOn:active{
