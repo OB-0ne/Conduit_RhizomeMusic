@@ -1,22 +1,24 @@
 /* SENDER-UI */
 
 #app-body-sender{
-    background-color: #212224;
     /* margin: auto; */
     padding: 20px 10px;
     height: 100%;
     color: #f2e3c6;
     font-family: Helvetica, Arial, sans-serif;
-    background-image: url('img/main_bg.jpeg');
-    background-attachment: fixed;
-    background-size: cover;
-    background-repeat: repeat-y;
     font-size: 26px;
 }
 
 html,body{
     margin: 0px;
     height: 100%;
+}
+
+body{
+    background-image: url('img/main_bg.jpeg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: repeat-y;
 }
 
 #sender_welcome{
