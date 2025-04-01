@@ -21,7 +21,7 @@ def index():
 def get_ice_config():
     return jsonify({"iceServers": token.ice_servers})
 
-@app.route("/laptop_Rob")
+@app.route("/laptop_performer")
 def receiver_page():
     return render_template('receiver.html')
 
