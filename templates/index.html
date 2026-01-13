@@ -8,6 +8,7 @@
         <script src= "{{url_for('static', filename='sender.js')}}"></script>
         <link rel="shortcut icon" href="static/img/icon.png">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='audioControls_levels.css') }}"/>
     </head>
     <body>
         <div id="app-body-sender">
@@ -18,6 +19,14 @@
                 <button id="MicOn" onclick="sendAudioStream()">
                     <img id="MicIcon" src="static/img/mic_icon_off.png" height="100px">
                 </button>
+                <div id="micLevels" style="display: none;">
+                    <div class="meter-container">
+                        <div class="meter" id="meterMic"></div>
+                    </div>
+                    <div class="level">
+                        <p>High<br><br><br><br>Low<br><br><br></p>
+                    </div>
+                </div>                
             </div>        
             <div id="MicInfo">
                 Your microphone is OFF

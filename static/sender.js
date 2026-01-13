@@ -10,10 +10,12 @@ function updateMicInfo(){
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
         document.getElementById('MicInfo').innerHTML = 'Your microphone is ON';
+        document.getElementById('micLevels').style.display = '';
     } else {
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_off.png');
         document.getElementById('MicInfo').innerHTML = 'Your microphone is OFF';
+        document.getElementById('micLevels').style.display = 'none';
     }
 }
 
@@ -110,6 +112,7 @@ async function sendAudioStream() {
         track.applyConstraints(aud_effect_constraints);
         peerConnection.addTrack(track, stream);
     });    
+    setupAudioVisulizer(stream);
     
     // this helps the user to send all their puclic access points while declaring themselves as 
     // an ICE candidate over the network to everyone
@@ -157,4 +160,47 @@ async function sendAudioStream() {
         updateMicInfo();
     });
 
+}
+
+function setupAudioVisulizer(micInput){
+
+    // Define an audio context which will help make the mixer visualization
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256; // Lower values give a smoother visualization
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    // connect the audio source to the analyzer
+    const source = audioContext.createMediaStreamSource(micInput);
+    source.connect(analyser);
+
+    showAudioLevels(analyser, dataArray);
+}
+
+function showAudioLevels(analyser, dataArray){    
+
+    requestAnimationFrame(() => showAudioLevels(analyser,dataArray));
+    analyser.getByteTimeDomainData(dataArray);    
+
+    // Compute volume level (RMS - Root Mean Square)
+    // compresses the whole wave into one value to represent loudness
+    let sum = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+        sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
+    }
+    let stream_volume = Math.sqrt(sum / dataArray.length);  // RMS value
+    
+    stream_volume = 20*Math.log10(Math.max(stream_volume, 1) / 127);
+    // Clamp to desired range for display
+    const MIN_DB = -45  ;
+    const MAX_DB = 0;
+    stream_volume = Math.max(MIN_DB, Math.min(MAX_DB, stream_volume));
+    finalDb = (stream_volume-MIN_DB)*(150/(MIN_DB-MAX_DB));
+    // console.log(stream_volume, finalDb);
+
+    finalDb = (stream_volume-MIN_DB)*(150/(MAX_DB-MIN_DB));
+
+    // move the meter height
+    // document.getElementById("micLevels").getElementsByClassName("meter-container")[0].style.height = stream_volume;
+    document.getElementById("meterMic").style.height = 150-finalDb;
 }

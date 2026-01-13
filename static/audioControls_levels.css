@@ -1,0 +1,36 @@
+#micLevels{
+    background-color: #f2e3c6;
+    border-radius: 15px;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border: 1px black;
+    transition: display 0s linear 0.5s;  
+}
+
+.level {
+  display: inline-block;
+  color: black;
+  font-family: sans-serif;
+  font-size: 12px;
+  line-height: 1.8em;
+}
+
+.meter-container {
+  display: inline-block;
+  background: -webkit-linear-gradient(#e21d1d 6%, #ff9d00 14%, #fff200 24%, #f2ea00 38%, #52b152 59%, #52b152 59%, #008a00 79%);
+  margin: 6px;
+  width: 25px;
+  height: 150px;
+  display: hidden;
+  border: 1px black solid;
+  box-sizing: content-box;
+}
+
+.meter {
+  display: inline-block;
+  position: absolute;
+  width: 25px;
+  height: 150px;
+  background: black;
+  transition: height 200ms;  
+}
