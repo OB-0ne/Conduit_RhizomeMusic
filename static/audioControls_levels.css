@@ -17,7 +17,8 @@
 
 .meter-container {
   display: inline-block;
-  background: -webkit-linear-gradient(#e21d1d 6%, #ff9d00 14%, #fff200 24%, #f2ea00 38%, #52b152 59%, #52b152 59%, #008a00 79%);
+  /* background: -webkit-linear-gradient(#e21d1d 6%, #ff9d00 14%, #fff200 24%, #f2ea00 38%, #52b152 59%, #52b152 59%, #008a00 79%); */
+  background: -webkit-linear-gradient(#e26d6d 6%, #ffc373 14%, #fff874 24%, #feea6c 38%, #77b577 59%, #77b278 59%, #4b874b 79%);
   margin: 6px;
   width: 25px;
   height: 150px;
