@@ -107,12 +107,13 @@ async function sendAudioStream() {
     
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
+    
+    out_stream = setupAudioVisulizer(stream);  
     // apply custom setting to each mic track and add it to the p2p connection
-    stream.getTracks().forEach(track => {
+    out_stream.stream.getTracks().forEach(track => {
         track.applyConstraints(aud_effect_constraints);
-        peerConnection.addTrack(track, stream);
-    });    
-    setupAudioVisulizer(stream);
+        peerConnection.addTrack(track, out_stream.stream);
+    });          
     
     // this helps the user to send all their puclic access points while declaring themselves as 
     // an ICE candidate over the network to everyone
@@ -170,11 +171,29 @@ function setupAudioVisulizer(micInput){
     analyser.fftSize = 256; // Lower values give a smoother visualization
     const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
+    const destination = audioContext.createMediaStreamDestination();
+
+    // Creating a compressor to address any loud and low sounds
+    const compressor = audioContext.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-20, audioContext.currentTime); // in dB
+    compressor.ratio.setValueAtTime(10, audioContext.currentTime); // ratio of 12:1
+    compressor.attack.setValueAtTime(0.1, audioContext.currentTime);
+    compressor.release.setValueAtTime(2, audioContext.currentTime);
+    
+    // Creating a gain control to increase volume after the compression
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 1.2; 
+
     // connect the audio source to the analyzer
     const source = audioContext.createMediaStreamSource(micInput);
-    source.connect(analyser);
+    source.connect(compressor);
+    compressor.connect(gainNode);
+    gainNode.connect(analyser);
+    gainNode.connect(destination);
 
     showAudioLevels(analyser, dataArray);
+
+    return destination
 }
 
 function showAudioLevels(analyser, dataArray){    
@@ -189,8 +208,8 @@ function showAudioLevels(analyser, dataArray){
         sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
     }
     let stream_volume = Math.sqrt(sum / dataArray.length);  // RMS value
-    
     stream_volume = 20*Math.log10(Math.max(stream_volume, 1) / 127);
+
     // Clamp to desired range for display
     const MIN_DB = -45  ;
     const MAX_DB = 0;
