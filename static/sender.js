@@ -214,12 +214,8 @@ function showAudioLevels(analyser, dataArray){
     const MIN_DB = -45  ;
     const MAX_DB = 0;
     stream_volume = Math.max(MIN_DB, Math.min(MAX_DB, stream_volume));
-    finalDb = (stream_volume-MIN_DB)*(150/(MIN_DB-MAX_DB));
-    // console.log(stream_volume, finalDb);
-
     finalDb = (stream_volume-MIN_DB)*(150/(MAX_DB-MIN_DB));
 
     // move the meter height
-    // document.getElementById("micLevels").getElementsByClassName("meter-container")[0].style.height = stream_volume;
     document.getElementById("meterMic").style.height = 150-finalDb;
 }

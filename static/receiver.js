@@ -167,13 +167,20 @@ function visualize(analyser, dataArray, audio, audio_level, audio_vol_threshold)
         sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
     }
     let stream_volume = Math.sqrt(sum / dataArray.length) * audio.volume;  // RMS value
+    stream_volume = 20*Math.log10(Math.max(stream_volume, 1) / 127);
+
+    // Clamp to desired range for display
+    const MIN_DB = -45  ;
+    const MAX_DB = 0;
+    stream_volume = Math.max(MIN_DB, Math.min(MAX_DB, stream_volume));
+    finalDb_UI = (stream_volume-MIN_DB)*(127/(MAX_DB-MIN_DB));
    
     // assign the slider with the volume value
-    audio_level.value = stream_volume.toFixed(0);
-    if (stream_volume>64){
+    audio_level.value = finalDb_UI.toFixed(0);
+    if (stream_volume>-8){
         audio_vol_threshold.style.backgroundColor = "red";
     }
-    else if(stream_volume>45){
+    else if(stream_volume>-22){
         audio_vol_threshold.style.backgroundColor = "orange";
     }
     else{

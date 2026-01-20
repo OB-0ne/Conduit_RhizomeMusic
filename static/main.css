@@ -141,6 +141,7 @@ audio::-moz-media-controls-timeline{
     border-radius: 18px;
     height: 14px;
     margin: auto 10px;
+    background-color: purple;
 }
 .audio-level::-webkit-slider-runnable-track {
     -webkit-appearance: none;
