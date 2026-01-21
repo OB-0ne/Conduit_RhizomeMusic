@@ -1,7 +1,8 @@
 #micLevels{
     background-color: #f2e3c6;
-    border-radius: 15px;
-    padding: 0 4px;
+    border-radius: 10px;
+    padding: 2px 0px;
+    margin: 0px 5px;
     box-sizing: border-box;
     border: 1px black;
     transition: display 0s linear 0.5s;  

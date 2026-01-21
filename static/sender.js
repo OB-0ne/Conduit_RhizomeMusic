@@ -163,6 +163,7 @@ async function sendAudioStream() {
 
 }
 
+let gainNode;
 function setupAudioVisulizer(micInput){
 
     // Define an audio context which will help make the mixer visualization
@@ -181,8 +182,7 @@ function setupAudioVisulizer(micInput){
     compressor.release.setValueAtTime(2, audioContext.currentTime);
     
     // Creating a gain control to increase volume after the compression
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 1.2; 
+    gainNode = audioContext.createGain();
 
     // connect the audio source to the analyzer
     const source = audioContext.createMediaStreamSource(micInput);
@@ -218,4 +218,18 @@ function showAudioLevels(analyser, dataArray){
 
     // move the meter height
     document.getElementById("meterMic").style.height = 150-finalDb;
+
+    // update dynamic gain
+    const MIN_DGain = 0.8;
+    const MAX_DBGain = 1.5;
+    if(stream_volume<-20){
+        gainNode.gain.value = stream_volume*(MAX_DBGain/-40);
+    }
+    else if(stream_volume>-10){
+        gainNode.gain.value = MIN_DGain + stream_volume/(-10);
+    }
+    else{
+        gainNode.gain.value = 1;
+    }
+    console.log(stream_volume, gainNode.gain.value);
 }
