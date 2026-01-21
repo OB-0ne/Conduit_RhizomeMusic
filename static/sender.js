@@ -219,14 +219,14 @@ function showAudioLevels(analyser, dataArray){
     // move the meter height
     document.getElementById("meterMic").style.height = 150-finalDb;
 
-    // update dynamic gain
+    // update dynamic gain where a custom equation is made - Desmos was used to check for possible equation
     const MIN_DGain = 0.8;
     const MAX_DBGain = 1.5;
     if(stream_volume<-20){
-        gainNode.gain.value = stream_volume*(MAX_DBGain/-40);
+        gainNode.gain.value = stream_volume*(MAX_DBGain/-180) + 0.865;
     }
     else if(stream_volume>-10){
-        gainNode.gain.value = MIN_DGain + stream_volume/(-10);
+        gainNode.gain.value = MIN_DGain + stream_volume/(-50);
     }
     else{
         gainNode.gain.value = 1;
