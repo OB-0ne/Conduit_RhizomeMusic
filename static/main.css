@@ -65,6 +65,10 @@ body{
     padding-inline-start: 25px; 
 }
 
+#websiteInfoBack ul li{
+    padding: 4px 1px;
+}
+
 #websiteInfoMoreButton{
     color: #2e77c9;;
     cursor: pointer;
