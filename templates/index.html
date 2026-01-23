@@ -8,6 +8,7 @@
         <script src= "{{url_for('static', filename='sender.js')}}"></script>
         <link rel="shortcut icon" href="static/img/icon.png">
         <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='audioControls_levels.css') }}"/>
     </head>
     <body>
         <div id="app-body-sender">
@@ -18,6 +19,14 @@
                 <button id="MicOn" onclick="sendAudioStream()">
                     <img id="MicIcon" src="static/img/mic_icon_off.png" height="100px">
                 </button>
+                <div id="micLevels" style="display: none;">
+                    <div class="meter-container">
+                        <div class="meter" id="meterMic"></div>
+                    </div>
+                    <!-- <div class="level">
+                        <p>High<br><br><br><br>Low<br><br><br></p>
+                    </div> -->
+                </div>                
             </div>        
             <div id="MicInfo">
                 Your microphone is OFF
@@ -26,19 +35,25 @@
                 <div><u>Instructions</u></div>
                 <ul>
                     <li>
-                        Please click the microphone icon once to turn on.
+                        Click the microphone icon once to turn on.
                     </li>
                     <li>
                         Allow permission to use your microphone if prompted.
                     </li>                    
                     <li class="more-websiteInfo audio-inactive-off">
-                        Once you close this webpage, your microphone will no longer be used.
+                        Once you close this browser tab, your microphone will no longer be used.
                     </li>
                     <li class="more-websiteInfo audio-inactive-off">
                         If your phone screen is locked, your microphone will be turned off, but it may try to reconnect after unlocking.
                     </li>
                     <li class="more-websiteInfo audio-inactive-off">
-                        Your microphone will automatically be disconnected after the performance ends.
+                        Your microphone will automatically be disconnected after the installation ends.
+                    </li>
+                    <li class="more-websiteInfo audio-inactive-off">
+                        The audio input levels are only visible after mic is connected. It should help you control how much sound is sent to the radios.
+                    </li>
+                    <li class="more-websiteInfo audio-inactive-off">
+                        If you face issues, try again after refreshing the webpage.
                     </li>
                 </ul>
                 <div id="websiteInfoMoreButton" onclick="hideUnhideWebsiteInfo()">

@@ -65,6 +65,10 @@ body{
     padding-inline-start: 25px; 
 }
 
+#websiteInfoBack ul li{
+    padding: 4px 1px;
+}
+
 #websiteInfoMoreButton{
     color: #2e77c9;;
     cursor: pointer;
@@ -141,6 +145,7 @@ audio::-moz-media-controls-timeline{
     border-radius: 18px;
     height: 14px;
     margin: auto 10px;
+    background-color: purple;
 }
 .audio-level::-webkit-slider-runnable-track {
     -webkit-appearance: none;

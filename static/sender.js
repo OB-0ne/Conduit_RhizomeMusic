@@ -10,10 +10,12 @@ function updateMicInfo(){
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_on.png');
         document.getElementById('MicInfo').innerHTML = 'Your microphone is ON';
+        document.getElementById('micLevels').style.display = '';
     } else {
         // change the mic icon and info to show that audio is being tranfer
         document.getElementById('MicIcon').setAttribute('src','static/img/mic_icon_off.png');
         document.getElementById('MicInfo').innerHTML = 'Your microphone is OFF';
+        document.getElementById('micLevels').style.display = 'none';
     }
 }
 
@@ -105,11 +107,13 @@ async function sendAudioStream() {
     
     // make a p2p connection
     const peerConnection = new RTCPeerConnection(rtcConfig);
+    
+    out_stream = setupAudioVisulizer(stream);  
     // apply custom setting to each mic track and add it to the p2p connection
-    stream.getTracks().forEach(track => {
+    out_stream.stream.getTracks().forEach(track => {
         track.applyConstraints(aud_effect_constraints);
-        peerConnection.addTrack(track, stream);
-    });    
+        peerConnection.addTrack(track, out_stream.stream);
+    });          
     
     // this helps the user to send all their puclic access points while declaring themselves as 
     // an ICE candidate over the network to everyone
@@ -157,4 +161,75 @@ async function sendAudioStream() {
         updateMicInfo();
     });
 
+}
+
+let gainNode;
+function setupAudioVisulizer(micInput){
+
+    // Define an audio context which will help make the mixer visualization
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256; // Lower values give a smoother visualization
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    const destination = audioContext.createMediaStreamDestination();
+
+    // Creating a compressor to address any loud and low sounds
+    const compressor = audioContext.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-20, audioContext.currentTime); // in dB
+    compressor.ratio.setValueAtTime(10, audioContext.currentTime); // ratio of 12:1
+    compressor.attack.setValueAtTime(0.1, audioContext.currentTime);
+    compressor.release.setValueAtTime(2, audioContext.currentTime);
+    
+    // Creating a gain control to increase volume after the compression
+    gainNode = audioContext.createGain();
+
+    // connect the audio source to the analyzer
+    const source = audioContext.createMediaStreamSource(micInput);
+    source.connect(compressor);
+    compressor.connect(gainNode);
+    gainNode.connect(analyser);
+    gainNode.connect(destination);
+
+    showAudioLevels(analyser, dataArray);
+
+    return destination
+}
+
+function showAudioLevels(analyser, dataArray){    
+
+    requestAnimationFrame(() => showAudioLevels(analyser,dataArray));
+    analyser.getByteTimeDomainData(dataArray);    
+
+    // Compute volume level (RMS - Root Mean Square)
+    // compresses the whole wave into one value to represent loudness
+    let sum = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+        sum += Math.pow(dataArray[i] - 128, 2);  // Normalize around 128
+    }
+    let stream_volume = Math.sqrt(sum / dataArray.length);  // RMS value
+    stream_volume = 20*Math.log10(Math.max(stream_volume, 1) / 127);
+
+    // Clamp to desired range for display
+    const MIN_DB = -45  ;
+    const MAX_DB = 0;
+    stream_volume = Math.max(MIN_DB, Math.min(MAX_DB, stream_volume));
+    finalDb = (stream_volume-MIN_DB)*(150/(MAX_DB-MIN_DB));
+
+    // move the meter height
+    document.getElementById("meterMic").style.height = 150-finalDb;
+
+    // update dynamic gain where a custom equation is made - Desmos was used to check for possible equation
+    const MIN_DGain = 0.8;
+    const MAX_DBGain = 1.5;
+    if(stream_volume<-20){
+        gainNode.gain.value = stream_volume*(MAX_DBGain/-180) + 0.865;
+    }
+    else if(stream_volume>-10){
+        gainNode.gain.value = MIN_DGain + stream_volume/(-50);
+    }
+    else{
+        gainNode.gain.value = 1;
+    }
+    console.log(stream_volume, gainNode.gain.value);
 }
